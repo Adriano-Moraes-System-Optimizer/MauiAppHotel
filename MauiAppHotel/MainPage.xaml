@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppHotel.MainPage"
+             Title="App Hotel">
+
+    <VerticalStackLayout Spacing="15" Padding="20">
+
+        <Label Text="Calculadora de Hospedagem" 
+               FontSize="22" 
+               FontAttributes="Bold" 
+               HorizontalOptions="Center" />
+
+        <Label Text="Escolha sua suíte:" />
+        <Picker x:Name="pck_quarto" 
+                Title="Selecione o quarto"
+                ItemDisplayBinding="{Binding Descricao}" />
+
+        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="10">
+            <Label Text="Adultos:" Grid.Row="0" Grid.Column="0" VerticalOptions="Center"/>
+            <Label x:Name="lbl_adultos" Text="{Binding Source={x:Reference stp_adultos}, Path=Value}" Grid.Row="0" Grid.Column="1" VerticalOptions="Center"/>
+            <Stepper x:Name="stp_adultos" Minimum="1" Maximum="10" Increment="1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+        </Grid>
+
+        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="10">
+            <Label Text="Crianças:" Grid.Row="0" Grid.Column="0" VerticalOptions="Center"/>
+            <Label x:Name="lbl_criancas" Text="{Binding Source={x:Reference stp_criancas}, Path=Value}" Grid.Row="0" Grid.Column="1" VerticalOptions="Center"/>
+            <Stepper x:Name="stp_criancas" Minimum="0" Maximum="10" Increment="1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+        </Grid>
+
+        <Label Text="Data de Check-in:" />
+        <DatePicker x:Name="dtpck_checkin" Format="dd/MM/yyyy" />
+
+        <Label Text="Data de Check-out:" />
+        <DatePicker x:Name="dtpck_checkout" Format="dd/MM/yyyy" />
+
+        <Button Text="Avançar / Calcular" Clicked="Button_Clicked" BackgroundColor="Purple" TextColor="White" />
+
+        <!-- Botão para acessar a tela Sobre solicitada no fichário -->
+        <Button Text="Sobre o Desenvolvedor" Clicked="BtnSobre_Clicked" BackgroundColor="Gray" TextColor="White" />
+
+    </VerticalStackLayout>
+</ContentPage>

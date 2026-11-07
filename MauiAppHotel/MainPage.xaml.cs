@@ -1,9 +1,13 @@
-﻿using MauiAppHotel.Models;
+﻿using Microsoft.Maui.Controls;
+using MauiAppHotel.Models;
+using System;
+using System.Collections.Generic;
 
 namespace MauiAppHotel
 {
     public partial class MainPage : ContentPage
     {
+        // A lista foi declarada corretamente DENTRO da classe MainPage
         public List<Quarto> lista_quartos = new List<Quarto>
         {
             new Quarto { Descricao = "Suíte Luxo", ValorDiariaAdulto = 250.0, ValorDiariaCrianca = 120.0 },
@@ -14,14 +18,12 @@ namespace MauiAppHotel
         public MainPage()
         {
             InitializeComponent();
-            pck_quarto.ItemsSource = lista_quartos;
 
-            dtpck_checkin.MinimumDate = DateTime.Now;
-            dtpck_checkin.Date = DateTime.Now;
-            dtpck_checkout.MinimumDate = DateTime.Now.AddDays(1);
-            dtpck_checkout.Date = DateTime.Now.AddDays(1);
+            // Liga os dados ao layout no momento em que a tela nasce
+            pck_quarto.ItemsSource = lista_quartos;
         }
 
+        // O método do botão também está DENTRO da classe
         private async void Button_Clicked(object sender, EventArgs e)
         {
             try
@@ -32,14 +34,16 @@ namespace MauiAppHotel
                     return;
                 }
 
-                ContratacaoHospedagem h = new ContratacaoHospedagem
-                {
-                    QuartoSelecionado = (Quarto)pck_quarto.SelectedItem,
-                    QuantidadeAdultos = Convert.ToInt32(stp_adultos.Value),
-                    QuantidadeCriancas = Convert.ToInt32(stp_criancas.Value),
-                    DataCheckIn = dtpck_checkin.Date ?? DateTime.Now,
-                    DataCheckOut = dtpck_checkout.Date ?? DateTime.Now.AddDays(1)
-                };
+                ContratacaoHospedagem h = new ContratacaoHospedagem();
+
+                // 1. O Check-in precisa ser preenchido primeiro com o .Value para a validação do Check-out funcionar
+                h.DataCheckIn = dtpck_checkin.Date.Value;
+                h.DataCheckOut = dtpck_checkout.Date.Value; // O .Value corrige os 2 erros CS0266 da sua imagem
+
+                // 2. Os demais dados são carregados acionando o encapsulamento
+                h.QuartoSelecionado = (Quarto)pck_quarto.SelectedItem;
+                h.QuantidadeAdultos = Convert.ToInt32(stp_adultos.Value);
+                h.QuantidadeCriancas = Convert.ToInt32(stp_criancas.Value);
 
                 await DisplayAlert("Resumo da Hospedagem",
                     $"Quarto: {h.QuartoSelecionado.Descricao}\n" +
@@ -48,13 +52,8 @@ namespace MauiAppHotel
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", ex.Message, "OK");
+                await DisplayAlert("Erro de Validação", ex.Message, "OK");
             }
-        }
-
-        private async void BtnSobre_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new SobrePage());
         }
     }
 }
